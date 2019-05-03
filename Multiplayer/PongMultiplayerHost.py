@@ -173,6 +173,8 @@ render()
 sleep(500)
 while True:  # main loop
     timeToWait = 500 - doStuff()
+    if timeToWait < 0:
+        timeToWait = 0
     render()
     if side != 0:
         break
