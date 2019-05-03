@@ -2,16 +2,8 @@ from microbit import *
 import random
 import radio
 
-sadFace = Image("00000:"
-                "09090:"
-                "09990:"
-                "90009:"
-                "00000")
-happyFace = Image("00000:"
-                  "09090:"
-                  "90009:"
-                  "09990:"
-                  "00000")
+sadFace = Image.SAD
+happyFace = Image.HAPPY
 
 bottomPadX = 1
 topPadX = 1
@@ -32,6 +24,14 @@ def render():  # render all the dots and wait so that they are visible
     display.set_pixel(bottomPadX, 4, 5)
     display.set_pixel((bottomPadX-1), 4, 5)
     display.set_pixel(ballX, ballY, 9)
+
+
+def renderLoading(state):
+    display.clear()
+    brightness = 9
+    for i in state:
+        display.set_pixel(i['x'], i['y'], brightness)
+        brightness -= 1
 
 
 def transferPresses():  # update the players paddle location
@@ -107,13 +107,31 @@ def doStuff():  # does everything other then rendering
     updateBall()
 
 
-display.scroll('SYNCING')
 radio.on()
-radio.send('startsync')
+loader = [{'x': 0, 'y': 0}, {'x': 0, 'y': 1}, {'x': 0, 'y': 2}, {'x': 0, 'y': 3}, {'x': 0, 'y': 4}, {'x': 1, 'y': 4}, {'x': 2, 'y': 4}, {'x': 3, 'y': 4}, {'x': 4, 'y': 4}]
+renderLoading(loader)
 while True:
+    for i in range(len(loader)):
+        currentLoader = loader[i]
+        if (currentLoader['x'] == 4) or (currentLoader['y'] == 4):
+            if (currentLoader['x'] == 4) and (currentLoader['y'] < 4):
+                currentLoader['y'] += 1
+            elif (currentLoader['y'] == 4) and (currentLoader['x'] > 0):
+                currentLoader['x'] -= 1
+            elif (currentLoader['x'] == 0) and (currentLoader['y'] > 0):
+                currentLoader['y'] -= 1
+        else:
+            if (currentLoader['x'] == 0) and (currentLoader['y'] > 0):
+                currentLoader['y'] -= 1
+            elif (currentLoader['y'] == 0) and (currentLoader['x'] < 4):
+                currentLoader['x'] += 1
+        loader[i] = currentLoader
+    renderLoading(loader)
+    radio.send('ready')
     lastMessage = radio.receive()
     if type(lastMessage) is str:
         break
+    sleep(100)
 currentTime = running_time()
 lastMessage = int(lastMessage)
 radio.send(str(lastMessage+1000))

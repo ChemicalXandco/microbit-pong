@@ -1,16 +1,8 @@
 from microbit import *
 import radio
 
-sadFace = Image("00000:"
-                "09090:"
-                "09990:"
-                "90009:"
-                "00000")
-happyFace = Image("00000:"
-                  "09090:"
-                  "90009:"
-                  "09990:"
-                  "00000")
+sadFace = Image.SAD
+happyFace = Image.HAPPY
 
 bottomPadX = 1
 topPadX = 1
