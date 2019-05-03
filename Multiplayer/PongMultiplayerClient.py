@@ -32,25 +32,58 @@ def transferPresses():  # update the players paddle location
 
 def updatePaddle():  # send and receive data
     global bottomPadX
-    radio.send(str(topPadX))
-    sleep(50)
-    bottomPadX = int(radio.receive())
+    timeAdded = 100
+    while True:
+        try:
+            radio.send(str(topPadX))
+            sleep(50)
+            bottomPadX = int(radio.receive())
+            radio.send('good')
+            sleep(50)
+            lastMessage = radio.receive()
+            if lastMessage != 'good':
+                raise TypeError('Communication failed.')
+            break
+        except TypeError:
+            timeAdded += 100
+            while True:
+                lastMessage = radio.receive()
+                if lastMessage == 'ping':
+                    break
+            radio.send('pong')
+    return timeAdded
 
 
 def updateBall():  # send and receive data
     global ballX
     global ballY
     global side
-    sleep(50)
-    ballX = int(radio.receive())
-    ballY = int(radio.receive())
-    side = int(radio.receive())
+    timeAdded = 50
+    while True:
+        try:
+            sleep(50)
+            ballX = int(radio.receive())
+            ballY = int(radio.receive())
+            side = int(radio.receive())
+            radio.send('good')
+            break
+        except TypeError:
+            timeAdded += 50
+            radio.send('bad')
+            while True:
+                lastMessage = radio.receive()
+                if lastMessage == 'ping':
+                    break
+            radio.send('pong')
+    return timeAdded
 
 
 def doStuff():  # does everything other then rendering
+    totalTimeAdded = 0
     transferPresses()
-    updatePaddle()
-    updateBall()
+    totalTimeAdded += updatePaddle()
+    totalTimeAdded += updateBall()
+    return totalTimeAdded
 
 
 radio.on()
@@ -72,16 +105,11 @@ while True:
 render()
 sleep(500)
 while True:  # main loop
-    doStuff()
+    timeToWait = 500 - doStuff()
     render()
     if side != 0:
         break
-    while True:
-        lastMessage = radio.receive()
-        if lastMessage == 'quicksync':
-            break
-    radio.send('quicksync')
-    sleep(400)
+    sleep(timeToWait)
 radio.off()
 if side == 1:  # show sad face if the ball hit the top
     display.show(sadFace)

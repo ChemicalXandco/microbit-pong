@@ -44,13 +44,29 @@ def transferPresses():  # update the players paddle location
 
 def updatePaddle():  # send and receive data
     global topPadX
-    radio.send(str(bottomPadX))
-    sleep(50)
-    topPadX = int(radio.receive())
+    timeAdded = 100
+    while True:
+        try:
+            radio.send(str(bottomPadX))
+            sleep(50)
+            topPadX = int(radio.receive())
+            radio.send('good')
+            sleep(50)
+            lastMessage = radio.receive()
+            if lastMessage != 'good':
+                raise TypeError('Communication failed.')
+            break
+        except TypeError:
+            timeAdded += 100
+            radio.send('ping')
+            while True:
+                lastMessage = radio.receive()
+                if lastMessage == 'pong':
+                    break
+    return timeAdded
 
 
 def updatePhysics():  # main game mechanics
-    global side
     global ballX
     global ballY
     global ballDirX
@@ -89,20 +105,36 @@ def updatePhysics():  # main game mechanics
 
 
 def updateBall():  # send and receive data
-    radio.send(str(ballX))
-    radio.send(str(ballY))
-    radio.send(str(side))
-    sleep(50)
+    timeAdded = 50
+    while True:
+        radio.send(str(ballX))
+        radio.send(str(ballY))
+        radio.send(str(side))
+        sleep(50)
+        while True:
+            lastMessage = radio.receive()
+            if type(lastMessage) is str:
+                break
+        if lastMessage != 'good':
+            timeAdded += 50
+            radio.send('ping')
+            while True:
+                lastMessage = radio.receive()
+                if lastMessage == 'pong':
+                    break
+        else:
+            break
+    return timeAdded
 
 
 def doStuff():  # does everything other then rendering
     global side
+    totalTimeAdded = 0
     transferPresses()
-    updatePaddle()
-    # updatePhysics()
+    totalTimeAdded += updatePaddle()
     side = updatePhysics()
-    # display.scroll(str(ballX)+", "+str(ballY)
-    updateBall()
+    totalTimeAdded += updateBall()
+    return totalTimeAdded
 
 
 radio.on()
@@ -140,16 +172,11 @@ while True:
 render()
 sleep(500)
 while True:  # main loop
-    doStuff()
+    timeToWait = 500 - doStuff()
     render()
     if side != 0:
         break
-    radio.send('quicksync')
-    while True:
-        lastMessage = radio.receive()
-        if lastMessage == 'quicksync':
-            break
-    sleep(400)
+    sleep(timeToWait)
 radio.off()
 if side == 1:  # show smiley face if the ball hit the top
     display.show(happyFace)
