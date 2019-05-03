@@ -127,12 +127,13 @@ while True:
                 currentLoader['x'] += 1
         loader[i] = currentLoader
     renderLoading(loader)
-    radio.send('ready')
+    radio.send('ping')
     lastMessage = radio.receive()
-    if type(lastMessage) is str:
+    if lastMessage == 'pong':
         break
     sleep(100)
 currentTime = running_time()
+lastMessage = radio.receive()
 lastMessage = int(lastMessage)
 radio.send(str(lastMessage+1000))
 while True:

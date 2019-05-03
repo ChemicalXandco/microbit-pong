@@ -53,11 +53,11 @@ def doStuff():  # does everything other then rendering
     updateBall()
 
 
-display.scroll('SYNCING')
 radio.on()
 while True:
     lastMessage = radio.receive()
-    if lastMessage == 'startsync':
+    if lastMessage == 'ping':
+        radio.send('pong')
         break
 radio.send(str(running_time()))
 while True:
