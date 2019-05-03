@@ -82,6 +82,7 @@ while True:  # main loop
             break
     radio.send('quicksync')
     sleep(400)
+radio.off()
 if side == 1:  # show sad face if the ball hit the top
     display.show(sadFace)
 elif side == 2:  # show smiley face if the ball hit the bottom

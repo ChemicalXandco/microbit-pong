@@ -150,6 +150,7 @@ while True:  # main loop
         if lastMessage == 'quicksync':
             break
     sleep(400)
+radio.off()
 if side == 1:  # show smiley face if the ball hit the top
     display.show(happyFace)
 elif side == 2:  # show sad face if the ball hit the bottom
