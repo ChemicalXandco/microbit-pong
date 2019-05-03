@@ -58,6 +58,7 @@ while True:
     lastMessage = radio.receive()
     if lastMessage == 'ping':
         radio.send('pong')
+        sleep(100)
         break
 radio.send(str(running_time()))
 while True:

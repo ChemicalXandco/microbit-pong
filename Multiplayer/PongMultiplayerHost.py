@@ -11,10 +11,8 @@ topPadX = 1
 ballX = 2
 ballY = 2
 
-ballDirX = (random.choice([-1, 1]))
+ballDirX = -1
 ballDirY = (random.choice([-1, 1]))
-# ballDirX = -1
-# ballDirY = -1
 
 
 def render():  # render all the dots and wait so that they are visible
@@ -127,10 +125,10 @@ while True:
                 currentLoader['x'] += 1
         loader[i] = currentLoader
     renderLoading(loader)
-    radio.send('ping')
     lastMessage = radio.receive()
     if lastMessage == 'pong':
         break
+    radio.send('ping')
     sleep(100)
 currentTime = running_time()
 lastMessage = radio.receive()
