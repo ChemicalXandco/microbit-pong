@@ -15,6 +15,20 @@ ballDirX = -1
 ballDirY = (random.choice([-1, 1]))
 
 
+def clearRadio(): # clear message queue
+    lastMessage = 'thing'
+    while lastMessage != None:
+        lastMessage = radio.receive()
+
+
+def pingPong(): # sync microbits
+    while True:
+        radio.send('s')
+        lastMessage = radio.receive()
+        if lastMessage == 'r':
+            break
+
+
 def render():  # render all the dots and wait so that they are visible
     display.clear()
     display.set_pixel(topPadX, 0, 5)
@@ -44,9 +58,11 @@ def transferPresses():  # update the players paddle location
 
 def updatePaddle():  # send and receive data
     global topPadX
-    timeAdded = 100
+    timeAdded = 150
     while True:
         try:
+            clearRadio()
+            sleep(50)
             radio.send(str(bottomPadX))
             sleep(50)
             topPadX = int(radio.receive())
@@ -57,12 +73,11 @@ def updatePaddle():  # send and receive data
                 raise TypeError('Communication failed.')
             break
         except TypeError:
-            timeAdded += 100
-            radio.send('ping')
-            while True:
-                lastMessage = radio.receive()
-                if lastMessage == 'pong':
-                    break
+            timeAdded += 150
+            pingPong()
+        except ValueError:
+            timeAdded += 150
+            pingPong()
     return timeAdded
 
 
@@ -107,21 +122,19 @@ def updatePhysics():  # main game mechanics
 def updateBall():  # send and receive data
     timeAdded = 50
     while True:
+        clearRadio()
         radio.send(str(ballX))
         radio.send(str(ballY))
         radio.send(str(side))
         sleep(50)
         while True:
             lastMessage = radio.receive()
-            if type(lastMessage) is str:
+            if (lastMessage == 'good') or (lastMessage == 'bad'):
+                radio.receive()
                 break
         if lastMessage != 'good':
             timeAdded += 50
-            radio.send('ping')
-            while True:
-                lastMessage = radio.receive()
-                if lastMessage == 'pong':
-                    break
+            pingPong()
         else:
             break
     return timeAdded
@@ -179,6 +192,8 @@ while True:  # main loop
     if side != 0:
         break
     sleep(timeToWait)
+    pingPong()
+    clearRadio()
 radio.off()
 if side == 1:  # show smiley face if the ball hit the top
     display.show(happyFace)
