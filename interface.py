@@ -12,12 +12,12 @@ happyFace = Image("00000:"
                   "00000")
 
 def renderPaddle(paddle):
-    for coordinates in paddle.boundingBox:
-        display.set_pixel(*coordinates, 5)
+    for coordinates in paddle.getBoundingBox():
+        display.set_pixel(coordinates[0], coordinates[1], 5)
 
 def render(pong):
     display.clear()
-    display.set_pixel(*pong.ball.coordinates, 9)
+    display.set_pixel(pong.ball.x, pong.ball.y, 9)
     renderPaddle(pong.topPaddle)
     renderPaddle(pong.bottomPaddle)
 

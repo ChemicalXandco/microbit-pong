@@ -3,15 +3,11 @@ import random
 
 class XY:
     def __init__(self, x, y):
-        self.coordinates = x, y
+        self.x = x
+        self.y = y
 
-    @property
-    def coordinates(self):
-        return (x, y)
-
-    @coordinates.setter
-    def coordinates(self, coordinates):
-        self.x, self.y = coordinates
+    def __list__(self):
+        return [self.x, self.y]
 
     def applyDelta(self, x, y):
         self.x += x
@@ -29,14 +25,11 @@ class Paddle(XY):
     def __init__(self, *args):
         super().__init__(*args)
 
-    @property
-    def boundingBox(self):
-        otherXY = XY(self.coordinates)
-        otherXY.applyDelta(1, 0)
-        return (
-            self.coordinates,
-            otherXY.coordinates
-        )
+    def getBoundingBox(self):
+        return [
+            list(self),
+            [self.x+1, self.y]
+        ]
 
     def move(self, pong, amount):
         self.x += amount
@@ -46,9 +39,9 @@ class Paddle(XY):
             self.x = pong.x
 
 
-class CorePong(XY)
+class CorePong(XY):
     def __init__(self, x=4, y=4):
-        super().__init__(self, x, y)
+        super().__init__(x, y)
 
         self.ball = Ball(2, 2)
 

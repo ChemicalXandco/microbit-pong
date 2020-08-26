@@ -1,6 +1,6 @@
 import radio
 
-from game.core import *
+from core import *
 
 
 class HostXY(XY):
@@ -23,7 +23,7 @@ class HostPaddle(Paddle, HostXY):
 
 class HostPong(CorePong):
     def __init__(self, *args):
-        super.__init__(*args)
+        super().__init__(*args)
 
         self.ball = HostBall(2, 2)
 

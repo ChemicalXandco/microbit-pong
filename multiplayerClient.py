@@ -1,6 +1,6 @@
 import radio
 
-from game.core import *
+from core import *
 
 
 class ClientXY(XY):
@@ -23,7 +23,7 @@ class ClientPaddle(Paddle, ClientXY):
 
 class ClientPong(CorePong):
     def __init__(self, *args):
-        super.__init__(*args)
+        super().__init__(*args)
 
         self.ball = ClientBall(2, 2)
 
