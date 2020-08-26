@@ -1,6 +1,6 @@
 import radio
 
-from core import *
+from core import XY, CorePong
 
 
 class ClientXY(XY):
@@ -9,11 +9,6 @@ class ClientXY(XY):
 
     def sync(self):
         
-
-
-class ClientBall(Ball, ClientXY):
-    def __init__(self, *args):
-        super().__init__(*args)
 
 
 class ClientPaddle(Paddle, ClientXY):
@@ -25,7 +20,8 @@ class ClientPong(CorePong):
     def __init__(self, *args):
         super().__init__(*args)
 
-        self.ball = ClientBall(2, 2)
+        # we don't need to use the ball functions on the client
+        self.ball = ClientXY(2, 2)
 
         self.topPaddle = ClientPaddle(2, 0)
         self.bottomPaddle = ClientPaddle(1, 4)
