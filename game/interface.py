@@ -20,3 +20,8 @@ def render(pong):
     display.set_pixel(*pong.ball.coordinates, 9)
     renderPaddle(pong.topPaddle)
     renderPaddle(pong.bottomPaddle)
+
+def getChange():
+    change = button_b.get_presses()
+    change -= button_a.get_presses()
+    return change
