@@ -6,9 +6,6 @@ class XY:
         self.x = x
         self.y = y
 
-    def __list__(self):
-        return [self.x, self.y]
-
     def applyDelta(self, x, y):
         self.x += x
         self.y += y
@@ -27,7 +24,7 @@ class Paddle(XY):
 
     def getBoundingBox(self):
         return [
-            list(self),
+            [self.x, self.y],
             [self.x+1, self.y]
         ]
 
@@ -42,8 +39,3 @@ class Paddle(XY):
 class CorePong(XY):
     def __init__(self, x=4, y=4):
         super().__init__(x, y)
-
-        self.ball = Ball(2, 2)
-
-        self.topPaddle = Paddle(2, 0)
-        self.bottomPaddle = Paddle(1, 4)
