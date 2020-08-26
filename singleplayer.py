@@ -1,3 +1,4 @@
+from microbit import sleep
 from micropython import const
 from random import randint
 
@@ -17,7 +18,18 @@ class SingleplayerPong(CorePong):
         self.bottomPaddle = Paddle(1, 4)
 
 
+def getAIChange():
+    if pong.topPaddle.x < pong.ball.x:
+        return 1
+    elif pong.topPaddle.x > pong.ball.x:
+        return -1
+    return 0
+
+
 pong = SingleplayerPong()
 while True:
+    pong.topPaddle.move(pong, getAIChange())
     pong.bottomPaddle.move(pong, getChange())
+    pong.ball.move(pong)
     render(pong)
+    sleep(1000)

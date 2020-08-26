@@ -17,6 +17,21 @@ class Ball(XY):
 
         self.direction = XY(*[ random.choice([-1, 1]) for i in range(2) ])
 
+    def move(self, pong):
+        newX = self.x + self.direction.x
+        if newX < 0 or newX > pong.x:
+            self.direction.x *= -1
+
+        for paddle in [pong.topPaddle, pong.bottomPaddle]:
+            for i, coordinates in enumerate(paddle.getBoundingBox()):
+                if self.x + self.direction.x == coordinates[0] and self.y + self.direction.y == coordinates[1]:
+                    # bounce
+                    self.direction.x = (i * 2) - 1
+                    self.direction.y *= -1
+
+        self.x += self.direction.x
+        self.y += self.direction.y
+
 
 class Paddle(XY):
     def __init__(self, *args):
