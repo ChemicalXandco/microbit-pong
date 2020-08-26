@@ -32,8 +32,8 @@ class Paddle(XY):
         self.x += amount
         if self.x < 0:
             self.x = 0
-        elif self.x > pong.x:
-            self.x = pong.x
+        elif self.x > pong.x - 1:
+            self.x = pong.x - 1
 
 
 class CorePong(XY):
