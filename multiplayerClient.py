@@ -1,19 +1,6 @@
-import radio
-
-from core import XY, CorePong
-
-
-class ClientXY(XY):
-    def __init__(self, *args):
-        super().__init__(*args)
-
-    def sync(self):
-        
-
-
-class ClientPaddle(Paddle, ClientXY):
-    def __init__(self, *args):
-        super().__init__(*args)
+from core import CorePong
+from multiplayer import HostPaddle, ClientXY, ClientPaddle
+from interface import *
 
 
 class ClientPong(CorePong):
