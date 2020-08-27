@@ -20,12 +20,13 @@ class Ball(XY):
     def move(self, pong):
         newX = self.x + self.direction.x
         if newX < 0 or newX > pong.x:
+            # bounce off walls
             self.direction.x *= -1
 
         for paddle in [pong.topPaddle, pong.bottomPaddle]:
             for i, coordinates in enumerate(paddle.getBoundingBox()):
-                if self.x + self.direction.x == coordinates[0] and self.y + self.direction.y == coordinates[1]:
-                    # bounce
+                if self.x == coordinates[0] and self.y + self.direction.y == coordinates[1]:
+                    # bounce off paddles
                     self.direction.x = (i * 2) - 1
                     self.direction.y *= -1
 
