@@ -11,6 +11,12 @@ happyFace = Image("00000:"
                   "09990:"
                   "00000")
 
+def displayWinner(winner, side):
+    if winner == side:
+        display.show(happyFace)
+    else:
+        display.show(sadFace)
+
 def renderPaddle(paddle):
     for coordinates in paddle.getBoundingBox():
         display.set_pixel(coordinates[0], coordinates[1], 5)
@@ -25,3 +31,10 @@ def getChange():
     change = button_b.get_presses()
     change -= button_a.get_presses()
     return change
+
+def flashBall(ball):
+    while True:
+        display.set_pixel(ball.x, ball.y, 9)
+        sleep(500)
+        display.set_pixel(ball.x, ball.y, 0)
+        sleep(500)

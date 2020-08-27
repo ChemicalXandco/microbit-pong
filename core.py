@@ -55,3 +55,11 @@ class Paddle(XY):
 class CorePong(XY):
     def __init__(self, x=4, y=4):
         super().__init__(x, y)
+
+    def getWinner(self):
+        if self.ball.y == 0:
+            return 2
+        if self.ball.y == self.y:
+            return 1
+        else:
+            return 0

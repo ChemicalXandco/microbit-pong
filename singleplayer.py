@@ -5,7 +5,8 @@ from random import randint
 from core import *
 from interface import *
 
-DIFFICULTY = const(0)
+# value from 0 - 100, 100 is impossible
+DIFFICULTY = const(90)
 
 START_SPEED = const(1000)
 MIN_SPEED = const(100)
@@ -34,7 +35,8 @@ def getAIChange():
 pong = SingleplayerPong()
 speed = START_SPEED
 while True:
-    pong.topPaddle.move(pong, getAIChange())
+    if randint(1, 100) <= DIFFICULTY:
+        pong.topPaddle.move(pong, getAIChange())
     pong.bottomPaddle.move(pong, getChange())
     pong.ball.move(pong)
     render(pong)
@@ -43,3 +45,9 @@ while True:
     speed -= SPEED_CHANGE_RATE * (speed / START_SPEED)
     if speed < MIN_SPEED:
         speed = MIN_SPEED
+
+    winner = pong.getWinner()
+    if winner:
+        displayWinner(winner, 2)
+        break
+flashBall(pong.ball)
