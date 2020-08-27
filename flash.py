@@ -1,5 +1,4 @@
 import sys
-import os
 import time
 
 from uflash import flash
@@ -7,17 +6,17 @@ from microfs import put
 
 DELAY = 1
 
-def flashFile():
-    f = sys.argv[1]
-    flash(path_to_python=f)
+def flashFile(f, paths_to_microbits=None):
+    flash(path_to_python=f, paths_to_microbits=paths_to_microbits)
     print('flash successful')
+    time.sleep(DELAY)
 
-def copyFile(fpath):
-    put(fpath, target=fpath)
+def copyFile(fpath, serial=None):
+    put(fpath, target=fpath, serial=None)
     print('successfully copied', fpath)
+    time.sleep(DELAY)
 
-flashFile()
-time.sleep(DELAY)
-copyFile('core.py')
-time.sleep(DELAY)
-copyFile('interface.py')
+if __name__ == "main":
+    flashFile(sys.argv[1])
+    copyFile('core.py')
+    copyFile('interface.py')
